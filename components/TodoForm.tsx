@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
   description: z.string().min(3, {
@@ -23,7 +24,7 @@ const FormSchema = z.object({
   }),
 });
 
-export default function TodoForm() {
+export default function TodoForm({ className }: React.ComponentProps<"form">) {
   const { addTask, closeDialog } = useStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -48,7 +49,10 @@ export default function TodoForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      {/* <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={`w-2/3 space-y-6 ${className}`}
+      >
         <FormField
           control={form.control}
           name="description"
@@ -63,6 +67,25 @@ export default function TodoForm() {
           )}
         />
         <Button type="submit">Create</Button>
+      </form> */}
+      <form
+        className={cn("grid items-start gap-4", className)}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Task description</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Create task</Button>
       </form>
     </Form>
   );
